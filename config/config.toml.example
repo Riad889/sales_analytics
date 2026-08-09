@@ -1,0 +1,7 @@
+ENVIRONMENT = "development"
+
+[database]
+HOSTNAME = "local"
+PORT = 5432
+PASSWORD = "postgres"
+NAME = "travel_analytics"

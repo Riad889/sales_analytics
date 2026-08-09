@@ -1,0 +1,15 @@
+
+
+[project]
+name = "travel-analytics"
+version = "0.1.0"
+description = "Travel analytics project"
+requires-python = ">=3.11"
+dependencies = [
+  "Faker>=40.31.0<40.32.0",
+  "ruff>=0.15.22,<0.17.0",
+  "SQLAlchemy >=2.0.51<2.1.0",
+  "dynaconf >=3.3.5<4.0.0",
+  "tqdm >=4.70.0,<4.71.0",
+  "pyspark >=4.2.0,<4.3.0"
+]
