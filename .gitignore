@@ -1,3 +1,6 @@
 .venv/*
 config/config.toml
 data/
+
+__pycache__/
+*.pyc

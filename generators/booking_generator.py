@@ -5,7 +5,7 @@ from generators.constants import HOTELS, CAMPAIGNS
 from datetime import timedelta
 from faker import Faker
 
-from .constants import LOYALTY, TRAFFIC_SOURCES, DEVICES
+from generators.constants import LOYALTY, TRAFFIC_SOURCES, DEVICES
 from shared.utils import Utils
 
 

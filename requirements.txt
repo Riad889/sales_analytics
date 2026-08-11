@@ -10,7 +10,7 @@ greenlet==3.5.3
     # via sqlalchemy
 py4j==0.10.9.9
     # via pyspark
-pyspark==4.2.0
+pyspark==3.5.9
     # via travel-analytics (./pyproject.toml)
 ruff==0.15.22
     # via travel-analytics (./pyproject.toml)
