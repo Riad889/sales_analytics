@@ -35,32 +35,32 @@ def initalize_spark_session(app_name="Travel Analytics") -> SparkSession:
 
 
 def main():
-    parser = ArgumentParser(description="Generate booking data")
+    parser = ArgumentParser(description="Generate and process sales data")
     parser.add_argument(
         "--data_size",
         type=int,
         required=False,
-        default=100_00_000,
-        help="Number of booking records to generate (default: 100,000,000)",
+        default=100_000_000,
+        help="Number of sales records to generate (default: 100,000,000)",
     )
     parser.add_argument(
         "--chunk_size",
         type=int,
         required=False,
-        default=100_000,
-        help="Number of booking records to generate per chunk (default: 100,000)",
+        default=500_000,
+        help="Number of sales records to generate per chunk (default: 500,000)",
     )
 
     parser.add_argument(
-        "--data_generator", choices=["booking"],required=False, help="Type of data generator to use"
+        "--data_generator",
+        choices=["sales"],
+        required=False,
+        help="Type of data generator to use",
     )
 
     parser.add_argument(
-            "--cron_job",
-            type=str,
-            required=False,
-            help="Name of the cron job to run"
-        )
+        "--cron_job", type=str, required=False, help="Name of the cron job to run"
+    )
     args = parser.parse_args()
 
     if args.data_generator:
