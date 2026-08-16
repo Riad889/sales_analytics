@@ -19,5 +19,6 @@ class Sales(Core):
         sales_df = self.spark.read.json(sales_data_path)
 
         final_df = self.sales_processor.process_sales(sales_data=sales_df)
+        
 
         return final_df

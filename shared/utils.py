@@ -14,5 +14,19 @@ class Utils:
             yield data_list[i : i + chunk_size]
 
     def save_to_jsonl(self, data, output_file):
-        with open(output_file, "a", encoding="utf-8") as file:
-            file.writelines(json.dumps(record) + "\n" for record in data)
+        try:
+            with open(output_file, "a", encoding="utf-8") as file:
+                file.writelines(json.dumps(record) + "\n" for record in data)
+        except Exception as error:
+            print(f"save_to_jsonl => error:{error}")
+
+    def load_schema_file(self, filepath: str):
+        sql = None
+
+        try:
+            with open(filepath, "r", encoding="utf-8") as file:
+                sql = file.read()
+        except Exception as error:
+            print(f"load_schema_file=> error:{error}")
+
+        return sql

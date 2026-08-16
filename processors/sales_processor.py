@@ -1,10 +1,15 @@
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
+from jobs.iceberg_table_manager import IcebergTableManager
+
+from shared.enums import TableName
+
 
 class SalesProcessor:
-    def __init__(self, spark):
-        self.spark = spark
+    def __init__(self, spark_session):
+        self.spark = spark_session
+        self.iceberg_table_manager = IcebergTableManager(spark_session=self.spark,)
 
     def process_sales(self, sales_data: DataFrame) -> DataFrame:
         """Process raw sales data through transformation pipeline"""
@@ -14,10 +19,10 @@ class SalesProcessor:
         df = self._process_pricing_data(df=df)
         df = self._process_payment_data(df=df)
         df = self._process_dates(df=df)
+        df = self.iceberg_table_manager.align_df_with_table(df = df, table_name = TableName.SALES_ANALYTICS)
         return df
 
     def _process_customer_data(self, df: DataFrame) -> DataFrame:
-        """Extract and flatten customer information"""
         return (
             df.withColumn(
                 "customer_id",
@@ -60,7 +65,6 @@ class SalesProcessor:
         )
 
     def _process_product_data(self, df: DataFrame) -> DataFrame:
-        """Extract and flatten product information"""
         return (
             df.withColumn(
                 "product_id",
@@ -97,7 +101,6 @@ class SalesProcessor:
         )
 
     def _process_channel_data(self, df: DataFrame) -> DataFrame:
-        """Extract sales and marketing channel information"""
         return (
             df.withColumn(
                 "sales_channel",
@@ -128,7 +131,6 @@ class SalesProcessor:
         )
 
     def _process_pricing_data(self, df: DataFrame) -> DataFrame:
-        """Extract and calculate pricing metrics"""
         return (
             df.withColumn(
                 "unit_price",
@@ -182,7 +184,6 @@ class SalesProcessor:
         )
 
     def _process_payment_data(self, df: DataFrame) -> DataFrame:
-        """Extract payment method and status"""
         return df.withColumn(
             "payment_method",
             F.when(
@@ -198,7 +199,6 @@ class SalesProcessor:
         )
 
     def _process_dates(self, df: DataFrame) -> DataFrame:
-        """Process and standardize date fields"""
         return (
             df.withColumn(
                 "order_date_ts",
