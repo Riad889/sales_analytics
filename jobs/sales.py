@@ -14,6 +14,10 @@ class Sales(Core):
         self.sales_processor = SalesProcessor(spark=self.spark)
 
     def run(self):
+        self.sales_processor.iceberg_table_manager.create_table(
+            table_name="sales_analytics.sales"
+        )
+
         sales_data_path = f"{BASE_DIR}/data/sales_data.jsonl"
 
         sales_df = self.spark.read.json(sales_data_path)

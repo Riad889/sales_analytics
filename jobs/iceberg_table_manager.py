@@ -15,16 +15,30 @@ class IcebergTableManager:
         self.utils = Utils()
         self.logger = logging.getLogger(__name__)
 
-    def create_table(self, table_name: str):
-        filepath = f"{BASE_DIR}/jobs/schema/{table_name}.sql"
+    def _resolve_schema_file(self, table_name: str) -> str:
+        catalog_table = table_name.split(".")
+        if len(catalog_table) >= 2:
+            schema_name = ".".join(catalog_table[:-1])
+            return f"{BASE_DIR}/jobs/schema/{schema_name}.sql"
+        return f"{BASE_DIR}/jobs/schema/{table_name}.sql"
 
+    def create_table(self, table_name: str):
+        if self.spark.catalog.tableExists(table_name):
+            self.logger.info(f"{table_name} already exists")
+            return
+
+        filepath = self._resolve_schema_file(table_name)
         sql = self.utils.load_schema_file(filepath=filepath)
+        if not sql:
+            raise FileNotFoundError(f"No schema found for {table_name} at {filepath}")
+
         try:
             self.spark.sql(sql)
             self.logger.info(f"{table_name} is successfully created")
 
         except Exception as error:
             self.logger.error(error)
+            raise
 
     def align_df_with_table(self, df: DataFrame, table_name: str) -> DataFrame:
         table_schema = self.spark.table(table_name).schema
