@@ -9,7 +9,9 @@ from shared.enums import TableName
 class SalesProcessor:
     def __init__(self, spark_session):
         self.spark = spark_session
-        self.iceberg_table_manager = IcebergTableManager(spark_session=self.spark,)
+        self.iceberg_table_manager = IcebergTableManager(
+            spark_session=self.spark,
+        )
 
     def process_sales(self, sales_data: DataFrame) -> DataFrame:
         """Process raw sales data through transformation pipeline"""
@@ -19,8 +21,15 @@ class SalesProcessor:
         df = self._process_pricing_data(df=df)
         df = self._process_payment_data(df=df)
         df = self._process_dates(df=df)
-        df = self.iceberg_table_manager.align_df_with_table(df = df, table_name = TableName.SALES_ANALYTICS)
+        df = self.iceberg_table_manager.align_df_with_table(
+            df=df, table_name=TableName.SALES_ANALYTICS.value
+        )
         return df
+
+    def insert_data(self, df: DataFrame):
+        self.iceberg_table_manager.insert_data_into_db(
+            df=df, table_name=TableName.SALES_ANALYTICS.value
+        )
 
     def _process_customer_data(self, df: DataFrame) -> DataFrame:
         return (
